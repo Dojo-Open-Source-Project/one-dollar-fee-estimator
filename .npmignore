@@ -1,0 +1,12 @@
+src/
+test/
+coverage/
+.vscode/
+.idea/
+.gitignore
+.eslintrc.json
+vitest.config.ts
+
+*.map
+
+tsconfig*

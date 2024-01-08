@@ -20,18 +20,12 @@ See [original README](https://code.samourai.io/oxt/one_dollar_fee_estimator/-/bl
 ## Installation
 ```shell
 npm i @samouraiwallet/one-dollar-fee-estimator
-
-# or globally
-
-npm i -g @samouraiwallet/one-dollar-fee-estimator
 ```
 
 ## Usage
 
-This library can be used both as a CLI tool (like original version) or it can be plugged to your existing Node.js project.
-Since it is very lighweight in bundled code as well as required dependencies, it doesn't consume any unnecessary resources.
-
-In order to avoid blocking the main event loop, estimator spawns its own worker thread which makes desired computations. 
+### CLI
+See [@samouraiwallet/one-dollar-fee-estimator-cli](../estimator-cli)
 
 ### Node.js
 
@@ -48,7 +42,9 @@ const estimator = new FeeEstimator({
         port: 8332,
         username: 'rpcUsername',
         password: 'rpcPassword'
-    }
+    },
+    useWorker: true, // optional, default false, set to true if your want to run estimator in a worker thread to prevent blocking of main thread
+    debug: true // optional, default false, set to true if you want to see debug logs
 })
 
 // handle errors emitted by FeeEstimator
@@ -59,8 +55,15 @@ estimator.on('error', (err) => {
 // receive live fee rate updates from the FeeEstimator
 estimator.on('fees', (fees) => {
     // fee rates received from FeeEstimator
-    // array of four numbers: [number, number, number, number]
-    // these fee rates correspond to the targets of [0.5, 0.9, 0.99, 0.999] (probabilities for fee rates for next block)
+    // object of targets and their feerates: 
+    // {
+    //  "0.2": number,
+    //  "0.5": number,
+    //  "0.9": number,
+    //  "0.99": number,
+    //  "0.999": number,
+    // }
+    // these targets are probabilities for fee rates for next block (20%, 50%, ...)
     receivedFees = fees;
 })
 
@@ -71,23 +74,3 @@ receivedFees = estimator.feeRates;
 estimator.stop()
 
 ```
-
-### CLI
-
-```shell
-node dist/bin.js --connection <host>:<port> --username <username> --password <password> [--mode <mode>] [--refresh <delay>]
-
-# OR when installed via NPM globally
-
-one-dollar-fee-estimator --connection <host>:<port> --username <username> --password <password> [--mode <mode>] [--refresh <delay>]
-
-[-c OR --connection] = Connection string to bitcoind RPC API. Must be of the form <host>:<port>
-
-[-u OR --username] = Username used to access bitcoind RPC API.
-
-[-p OR --password] = Password used to access bitcoind RPC API.
-
-[-m OR --mode] = Mode used for the estimate (value = txs | bundles).
-
-[-r OR --refresh] = Delay in seconds between 2 iterations of the computation.
- ```

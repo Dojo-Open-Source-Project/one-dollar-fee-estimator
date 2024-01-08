@@ -1,0 +1,45 @@
+{
+  "name": "@samouraiwallet/one-dollar-fee-estimator",
+  "version": "0.2.0",
+  "engines": {
+    "node": ">=16"
+  },
+  "description": "A script estimating the minimum feerate required for the inclusion of a bitcoin transaction into the next block.",
+  "keywords": [
+    "bitcoin",
+    "fees",
+    "calculator",
+    "estimator"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "typescript": "tsc --noEmit",
+    "build:clean": "rm -rf dist",
+    "build:esm": "tsc -p tsconfig.build.json",
+    "build": "pnpm run build:clean && pnpm run build:esm",
+    "prepack": "pnpm install && pnpm -w run lint && pnpm run typescript && pnpm run test",
+    "prepare": "pnpm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://code.samourai.io/dojo/one-dollar-fee-estimator-js.git"
+  },
+  "bugs": {
+    "url": "https://code.samourai.io/dojo/one-dollar-fee-estimator-js/-/issues"
+  },
+  "author": "Katana Cryptographic Ltd.",
+  "license": "LGPL-3.0",
+  "homepage": "https://code.samourai.io/dojo/one-dollar-fee-estimator-js",
+  "devDependencies": {
+    "@vitest/coverage-c8": "^0.31.0",
+    "vitest": "^0.31.0"
+  },
+  "dependencies": {}
+}

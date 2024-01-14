@@ -16,6 +16,7 @@ import type {
 } from './types';
 
 const {parse} = JSONBigInt({storeAsString: true, strict: true});
+import { readFileSync, accessSync, constants } from 'fs';
 
 /**
  * List of networks and their default port mapping.
@@ -35,6 +36,7 @@ type RPCOptions = {
     ssl?: boolean;
     username?: string;
     password?: string;
+    cookie?: string;
     timeout?: number;
 }
 
@@ -57,11 +59,28 @@ export class RPCClient {
         network = 'mainnet',
         username,
         password,
+        cookie,
         ssl = false,
         timeout = 30000,
     }: RPCOptions) {
         if (!networks[network]) {
             throw new Error(`Invalid network name ${network}`);
+        }
+
+        if (cookie) {
+            try {
+                accessSync(cookie, constants.R_OK);
+            } catch {
+                throw new Error(`Can't read cookie file: ${cookie}`);
+            }
+
+            let tokens = readFileSync(cookie).toString().split(":");
+            if (tokens.length != 2) {
+                throw new Error('Cookie file is invalid');
+            }
+
+            username = tokens[0];
+            password = tokens[1];
         }
 
         if (!username || !password) {

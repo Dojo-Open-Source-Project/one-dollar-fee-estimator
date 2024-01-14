@@ -6,8 +6,9 @@ export type Mode = 'txs' | 'bundles';
 export type RpcOptions = {
     host: string
     port: number
-    username: string
-    password: string
+    username?: string
+    password?: string
+    cookie?: string
     timeout?: number
 }
 

@@ -18,13 +18,19 @@ const main = async () => {
             alias: 'u',
             describe: 'Username used to access bitcoind RPC API',
             string: true,
-            demandOption: true
+            demandOption: false
         })
         .option('password', {
             alias: 'p',
             describe: 'Password used to access bitcoind RPC API',
             string: true,
-            demandOption: true
+            demandOption: false
+        })
+        .option('cookie', {
+            alias: 'k',
+            describe: 'Cookie file to access bitcoind RPC API',
+            string: true,
+            demandOption: false
         })
         .option('mode', {
             alias: 'm',
@@ -46,7 +52,8 @@ const main = async () => {
             host: argv.connection.host,
             port: argv.connection.port,
             username: argv.username,
-            password: argv.password
+            password: argv.password,
+            cookie: argv.cookie
         }
     });
 

@@ -7,10 +7,12 @@
   "plugins": [
     "@typescript-eslint",
     "import",
+    "prettier",
     "unicorn"
   ],
   "extends": [
     "eslint:recommended",
+    "prettier",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended",
     "plugin:import/typescript",
@@ -28,7 +30,7 @@
       "node": true
     }
   },
-  "ignorePatterns": ["*.min.js"],
+  "ignorePatterns": ["*.js", "*.min.js"],
   "parserOptions": {
     "ecmaVersion": 13,
     "sourceType": "module"
@@ -47,20 +49,9 @@
     "no-unmodified-loop-condition": "warn",
     "no-unreachable-loop": "error",
     "require-atomic-updates": "error",
-    "indent": [
-      "error",
-      4,
-      {
-        "SwitchCase": 1
-      }
-    ],
     "linebreak-style": [
       "error",
       "unix"
-    ],
-    "quotes": [
-      "error",
-      "single"
     ],
     "semi": [
       "error",
@@ -113,6 +104,7 @@
     "unicorn/numeric-separators-style": "off",
     "unicorn/require-post-message-target-origin": "off",
     "unicorn/no-array-reduce": "off",
-    "unicorn/prefer-dom-node-dataset": "off"
+    "unicorn/prefer-dom-node-dataset": "off",
+    "unicorn/switch-case-braces": "off"
   }
 }

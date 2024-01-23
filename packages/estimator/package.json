@@ -1,6 +1,6 @@
 {
   "name": "@samouraiwallet/one-dollar-fee-estimator",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "engines": {
     "node": ">=16"
   },

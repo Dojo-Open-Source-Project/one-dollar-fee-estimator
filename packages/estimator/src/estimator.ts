@@ -5,7 +5,7 @@ import { TypedEventEmitter, EventMap } from "./typesafe-event-emitter.js";
 import { initEstimator } from "./estimator-worker.js";
 
 interface Events extends EventMap {
-  fees: [Result];
+  data: [Result];
 }
 
 export type Options = FeeEstimatorOptions & { useWorker?: boolean };
@@ -13,13 +13,13 @@ export type Options = FeeEstimatorOptions & { useWorker?: boolean };
 // eslint-disable-next-line unicorn/prefer-event-target
 export class FeeEstimator extends TypedEventEmitter<Events> {
   private readonly estimator: Worker | MessagePort;
-  private _feeRates: Result;
+  private _data: Result;
 
   constructor(options: Options) {
     super();
 
-    this._feeRates = {
-      bitcoindUptime: 0,
+    this._data = {
+      ready: false,
       fees: {
         "0.1": 1,
         "0.2": 1,
@@ -41,8 +41,8 @@ export class FeeEstimator extends TypedEventEmitter<Events> {
   }
 
   private onWorkerMessage = (data: Result) => {
-    this._feeRates = data;
-    this.emit("fees", data);
+    this._data = data;
+    this.emit("data", data);
   };
 
   private onWorkerError = (error: Error) => {
@@ -51,12 +51,12 @@ export class FeeEstimator extends TypedEventEmitter<Events> {
 
   private onWorkerExit = (code: number) => {
     if (code !== 0) {
-      this.emit("error", new Error(`FeeEstimator worker stopped with  ${code} exit code`));
+      this.emit("error", new Error(`FeeEstimator worker stopped with ${code} exit code`));
     }
   };
 
-  public get feeRates(): Result {
-    return this._feeRates;
+  public get data(): Result {
+    return this._data;
   }
 
   public stop = () => {

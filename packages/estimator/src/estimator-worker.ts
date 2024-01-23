@@ -23,13 +23,13 @@ const initialFees: FeeRates = {
  * by the next block
  */
 // eslint-disable-next-line complexity
-const estimateFee = async function* (options: FeeEstimatorOptions, abortController?: AbortController): AsyncGenerator<Result, void, unknown> {
+const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: AbortSignal): AsyncGenerator<Result, void, unknown> {
   const { rpcOptions, mode = "txs", refresh = 30, debug } = options;
   const debugLog = createDebugLog(debug);
 
   debugLog("Estimator: Initialized with options:", options);
 
-  let bitcoindUptime = 0;
+  let ready = false;
   let last_b_hash = null;
   let prev_block_ts = null;
   let prev_weights = new Map<number, number>();
@@ -42,15 +42,13 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortControll
 
   // Detect stop signal
   let abort = false;
-  if (abortController) {
-    abortController.signal.addEventListener(
-      "abort",
-      () => {
-        abort = true;
-      },
-      { once: true },
-    );
-  }
+  abortSignal.addEventListener(
+    "abort",
+    () => {
+      abort = true;
+    },
+    { once: true },
+  );
 
   let lastFees = initialFees;
 
@@ -63,9 +61,9 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortControll
     debugLog("Estimator: Starting new iteration", new Date(start).toJSON());
 
     try {
-      const [b_hash, uptime] = await Promise.all([client.getbestblockhash(), client.getuptime()]);
+      const [b_hash, mempoolinfo] = await Promise.all([client.getbestblockhash(), client.getmempoolinfo()]);
 
-      bitcoindUptime = uptime;
+      ready = mempoolinfo.loaded;
 
       if (b_hash !== last_b_hash) {
         prev_weights.clear();
@@ -89,8 +87,8 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortControll
       }
     } catch (error) {
       console.error("Estimator: Encountered RPC error:", error);
-      yield { fees: lastFees, bitcoindUptime };
-      await abortableDelay(refresh * 1000);
+      yield { ready, fees: lastFees };
+      await abortableDelay(refresh * 1000, abortSignal);
       continue;
     }
 
@@ -107,8 +105,8 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortControll
       });
     } catch (error) {
       console.error("Estimator: Encountered RPC error:", error);
-      yield { fees: lastFees, bitcoindUptime };
-      await abortableDelay(refresh * 1000);
+      yield { ready, fees: lastFees };
+      await abortableDelay(refresh * 1000, abortSignal);
       continue;
     }
 
@@ -166,7 +164,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortControll
       }
 
       if (sum([...cmptd_weights.values()]) < 4000000) {
-        min_fees[p] = 1;
+        min_fees[p] = lb_feerate;
       } else {
         let weight = sum([...weights.entries()].filter(([k]) => k < lb_feerate).map(([, v]) => v));
         for (const k of ordered_keys) {
@@ -184,7 +182,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortControll
       }
     }
 
-    yield { fees: min_fees, bitcoindUptime };
+    yield { ready, fees: min_fees };
 
     lastFees = { ...min_fees };
 
@@ -195,7 +193,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortControll
     debugLog("Estimator: Done, cycle lasted", elapsed / 1000, "sec");
 
     if (elapsed < refresh * 1000) {
-      await abortableDelay(refresh * 1000 - elapsed, abortController);
+      await abortableDelay(refresh * 1000 - elapsed, abortSignal);
     }
   }
 };
@@ -212,7 +210,7 @@ const doWork = async (options: FeeEstimatorOptions, messagePort?: MessagePort) =
     }
   });
 
-  for await (const result of estimateFee(options, abortController)) {
+  for await (const result of estimateFee(options, abortController.signal)) {
     // send recommended fees over message port
     port.postMessage(result);
   }

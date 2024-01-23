@@ -54,11 +54,11 @@ estimator.on('error', (err) => {
 })
 
 // receive live fee rate updates from the FeeEstimator
-estimator.on('fees', (result) => {
-    // fee rates and bitcoind uptime received from FeeEstimator
+estimator.on('data', (result) => {
+    // fee rates and ready status received from FeeEstimator
     // object of targets and their feerates: 
     // {
-    //  bitcoindUptime: 674578,
+    //  ready: true,
     //  fees: {
     //    "0.1": number,
     //    "0.2": number,
@@ -68,13 +68,18 @@ estimator.on('fees', (result) => {
     //    "0.999": number,
     //   }
     // }
-    // these targets are probabilities for fee rates for next block (10%, 20%, 50%, ...)
-    // bitcoind uptime (in seconds) is included so that the API consumer can decide if bitcoind has had enough uptime to have a synced mempool
-    receivedFees = result.fees;
+    // `ready` field signals that the mempool of the bitcoind is synchronized
+    // calculated fee rates are unreliable if ready=false
+    if (result.ready) {
+      // these targets are probabilities for fee rates for next block (10%, 20%, 50%, ...)
+      receivedFees = result.fees;
+    }
 })
 
 // or just read last fee rates directly from the estimator
-receivedFees = estimator.feeRates;
+if (estimator.data.ready) {
+    receivedFees = estimator.data.fees;
+}
 
 // FeeEstimator will continue working until you stop it, or the process is terminated
 estimator.stop()

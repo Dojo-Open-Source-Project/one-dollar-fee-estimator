@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.3.0
+- use `getmempoolinfo` to detect ready state
+
 ## v0.2.0
 ### Major rewrite
 - Extracted CLI functionality into separate package

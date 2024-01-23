@@ -37,6 +37,8 @@ npx @samouraiwallet/one-dollar-fee-estimator-cli --connection <host>:<port> --us
 
 [-p OR --password] = Password used to access bitcoind RPC API.
 
+[-k OR --cookie] = Cookie used to access bitcoind RPC API instead of username and password.
+
 [-m OR --mode] = Mode used for the estimate (value = txs | bundles).
 
 [-r OR --refresh] = Delay in seconds between 2 iterations of the computation.

@@ -14,6 +14,7 @@ import type {
   RequestOptions,
   RPCResponse,
   GetUptimeReturnType,
+  GetMempoolInfoReturnType,
 } from "./types";
 
 /**
@@ -203,6 +204,10 @@ export class RPCClient {
       request.write(body);
       request.end();
     });
+  };
+
+  public getmempoolinfo = async (): Promise<GetMempoolInfoReturnType> => {
+    return await this.makeRequest({ method: "getmempoolinfo" });
   };
 
   public getbestblockhash = async (): Promise<string> => {

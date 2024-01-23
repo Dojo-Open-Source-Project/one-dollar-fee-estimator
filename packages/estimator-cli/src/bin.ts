@@ -107,8 +107,9 @@ const main = async () => {
     debug: argv.debug,
   });
 
-  estimator.on("fees", (fees) => {
-    console.log("Recommended fees are", fees.fees);
+  estimator.on("data", (data) => {
+    if (!data.ready) console.log("Bitcoind mempool not fully loaded. Fees are unreliable");
+    console.log("Recommended fees are", data.fees);
   });
 
   estimator.on("error", (error) => {

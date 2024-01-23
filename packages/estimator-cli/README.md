@@ -25,7 +25,7 @@ See [@samouraiwallet/one-dollar-fee-estimator](../estimator)
 ```shell
 # when installed via NPM globally
 
-one-dollar-fee-estimator-cli --connection <host>:<port> --username <username> --password <password> [--mode <mode>] [--refresh <delay>]
+one-dollar-fee-estimator --connection <host>:<port> --username <username> --password <password> [--mode <mode>] [--refresh <delay>]
 
 # OR using NPX
 

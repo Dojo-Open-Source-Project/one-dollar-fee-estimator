@@ -8,7 +8,7 @@ export type FeeRates = {
 };
 
 export type Result = {
-  bitcoindUptime: number;
+  ready: boolean;
   fees: FeeRates;
 };
 
@@ -38,7 +38,7 @@ export type FeeEstimatorOptions = {
 
 // RPC client
 
-export type MethodName = "getbestblockhash" | "getblockheader" | "getblock" | "getblocktemplate" | "uptime";
+export type MethodName = "getmempoolinfo" | "getbestblockhash" | "getblockheader" | "getblock" | "getblocktemplate" | "uptime";
 
 export type JSONPrimitive = string | number | boolean | null;
 export type JSONValue = JSONPrimitive | JSONType;
@@ -52,6 +52,18 @@ export type RPCResponse = {
 
 export type RequestOptions = {
   timeout?: number;
+};
+
+export type GetMempoolInfoReturnType = {
+  loaded: boolean;
+  size: number;
+  bytes: number;
+  usage: number;
+  total_fee: number;
+  maxmempool: number;
+  mempoolminfee: number;
+  minrelaytxfee: number;
+  unbroadcastcount: number;
 };
 
 export type GetBlockTemplateReturnType = {

@@ -13,23 +13,20 @@ export const median = (arr: number[]): number => {
   return arr.length % 2 ? arr[midpoint] : (arr[midpoint - 1] + arr[midpoint]) / 2;
 };
 
-export const abortableDelay = (ms: number, abortController?: AbortController) => {
+export const abortableDelay = (ms: number, abortSignal: AbortSignal) => {
   return new Promise<void>((resolve) => {
-    let listener: undefined | (() => void);
+    const listener = () => {
+      resolve();
+      clearTimeout(timeout);
+    };
 
     const timeout = setTimeout(() => {
       resolve();
-      if (abortController && listener) {
-        abortController.signal.removeEventListener("abort", listener);
+      if (listener) {
+        abortSignal.removeEventListener("abort", listener);
       }
     }, ms);
-    if (abortController) {
-      listener = () => {
-        resolve();
-        clearTimeout(timeout);
-      };
-      abortController.signal.addEventListener("abort", listener, { once: true });
-    }
+    abortSignal.addEventListener("abort", listener, { once: true });
   });
 };
 

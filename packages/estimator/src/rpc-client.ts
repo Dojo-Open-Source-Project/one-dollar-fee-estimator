@@ -1,6 +1,6 @@
 import * as http from "http";
 import * as https from "https";
-import { readFileSync, accessSync, constants } from "fs";
+import { readFileSync } from "fs";
 
 import type {
   GetBlockHeaderVerbosity,
@@ -51,43 +51,71 @@ export class RPCClient {
   private readonly timeout: number;
   private readonly agent: http.Agent | https.Agent;
 
-  constructor({ host = "localhost", port, network = "mainnet", username, password, cookie, ssl = false, timeout = 30000 }: RPCOptions) {
-    if (!networks[network]) {
+  constructor(options: RPCOptions) {
+    this.validateNetwork(options.network);
+
+    const credentials = this.getCredentials(options);
+    this.username = credentials.username;
+    this.password = credentials.password;
+
+    const defaults = this.getDefaults(options);
+    this.host = defaults.host;
+    this.port = defaults.port;
+    this.ssl = defaults.ssl;
+    this.timeout = defaults.timeout;
+
+    this.agent = this.instantiateAgent(this.ssl);
+  }
+
+  private validateNetwork(network?: keyof typeof networks) {
+    if (network && !networks[network]) {
       throw new Error(`Invalid network name ${network}`);
     }
+  }
 
+  private getCredentials(options: RPCOptions): { username: string; password: string } {
+    // eslint-disable-next-line prefer-const
+    let { username, password, cookie } = options;
     if (cookie) {
       [username, password] = this.handleCookie(cookie);
     }
-
     if (!username || !password) {
       throw new Error("Unathenticated RPC communication is not supported. Provide valid username and password");
     }
+    return { username, password };
+  }
 
-    this.username = username;
-    this.password = password;
+  private getDefaults(options: RPCOptions): { host: string; port: number; ssl: boolean; timeout: number } {
+    return {
+      host: options.host || "localhost",
+      port: options.port || networks[options.network || "mainnet"],
+      ssl: options.ssl || false,
+      timeout: options.timeout || 30000,
+    };
+  }
 
-    this.host = host;
-    this.port = port || networks[network];
-    this.ssl = ssl;
-    this.timeout = timeout;
-
-    this.agent = this.ssl ? new https.Agent({ keepAlive: true }) : new http.Agent({ keepAlive: true });
+  private instantiateAgent(ssl: boolean): http.Agent | https.Agent {
+    return ssl ? new https.Agent({ keepAlive: true }) : new http.Agent({ keepAlive: true });
   }
 
   private handleCookie(cookie: string): [string, string] {
     try {
-      accessSync(cookie, constants.R_OK);
-    } catch {
-      throw new Error(`Can't read cookie file: ${cookie}`);
+      const tokens = readFileSync(cookie, "utf8").split(":");
+      if (tokens.length !== 2) {
+        throw new Error("Cookie file is invalid");
+      }
+      return [tokens[0].trim(), tokens[1].trim()];
+    } catch (error_) {
+      const error = error_ as NodeJS.ErrnoException;
+      switch (error.code) {
+        case "ENOENT":
+          throw new Error(`File not found: ${cookie}`);
+        case "EACCES":
+          throw new Error(`Permission denied: ${cookie}`);
+        default:
+          throw error;
+      }
     }
-
-    const tokens = readFileSync(cookie, "utf8").split(":");
-
-    if (tokens.length !== 2) {
-      throw new Error("Cookie file is invalid");
-    }
-    return [tokens[0].trim(), tokens[1].trim()];
   }
 
   private createRequest = (reqBody: JSONType, options?: RequestOptions) => {

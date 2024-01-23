@@ -41,7 +41,8 @@ const estimator = new FeeEstimator({
         host: 'localhost',
         port: 8332,
         username: 'rpcUsername',
-        password: 'rpcPassword'
+        password: 'rpcPassword',
+        cookie: 'path/to/cookiefile' // optionally use cookie instead of username & password
     },
     useWorker: true, // optional, default false, set to true if your want to run estimator in a worker thread to prevent blocking of main thread
     debug: true // optional, default false, set to true if you want to see debug logs
@@ -53,18 +54,23 @@ estimator.on('error', (err) => {
 })
 
 // receive live fee rate updates from the FeeEstimator
-estimator.on('fees', (fees) => {
-    // fee rates received from FeeEstimator
+estimator.on('fees', (result) => {
+    // fee rates and bitcoind uptime received from FeeEstimator
     // object of targets and their feerates: 
     // {
-    //  "0.2": number,
-    //  "0.5": number,
-    //  "0.9": number,
-    //  "0.99": number,
-    //  "0.999": number,
+    //  bitcoindUptime: 674578,
+    //  fees: {
+    //    "0.1": number,
+    //    "0.2": number,
+    //    "0.5": number,
+    //    "0.9": number,
+    //    "0.99": number,
+    //    "0.999": number,
+    //   }
     // }
-    // these targets are probabilities for fee rates for next block (20%, 50%, ...)
-    receivedFees = fees;
+    // these targets are probabilities for fee rates for next block (10%, 20%, 50%, ...)
+    // bitcoind uptime (in seconds) is included so that the API consumer can decide if bitcoind has had enough uptime to have a synced mempool
+    receivedFees = result.fees;
 })
 
 // or just read last fee rates directly from the estimator

@@ -54,7 +54,7 @@ importers:
   packages/estimator-cli:
     dependencies:
       '@samouraiwallet/one-dollar-fee-estimator':
-        specifier: workspace:0.2.0
+        specifier: workspace:0.3.1
         version: link:../estimator
       yargs:
         specifier: ^17.7.2

@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.0
+## v0.3.1
 - use `getmempoolinfo` to detect ready state
 - minor API change - see [README.md](./README.md)
 

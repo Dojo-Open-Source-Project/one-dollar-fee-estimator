@@ -15,6 +15,10 @@ export const median = (arr: number[]): number => {
 
 export const abortableDelay = (ms: number, abortSignal: AbortSignal) => {
   return new Promise<void>((resolve) => {
+    if (abortSignal.aborted) {
+      return resolve();
+    }
+
     const listener = () => {
       resolve();
       clearTimeout(timeout);
@@ -22,9 +26,7 @@ export const abortableDelay = (ms: number, abortSignal: AbortSignal) => {
 
     const timeout = setTimeout(() => {
       resolve();
-      if (listener) {
-        abortSignal.removeEventListener("abort", listener);
-      }
+      abortSignal.removeEventListener("abort", listener);
     }, ms);
     abortSignal.addEventListener("abort", listener, { once: true });
   });

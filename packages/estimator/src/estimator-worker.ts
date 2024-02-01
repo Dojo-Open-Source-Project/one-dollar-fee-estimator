@@ -31,32 +31,19 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
 
   let ready = false;
   let last_b_hash = null;
+  let last_b_height = null;
   let prev_block_ts = null;
   let prev_weights = new Map<number, number>();
   const nb_samples = Math.floor((10 * 60) / refresh);
   const delta_weights = new RingBuffer<Map<number, number>>(nb_samples);
   const interblocks = new RingBuffer<number>(144);
 
-  const client = new RPCClient(rpcOptions);
+  const client = new RPCClient(rpcOptions, abortSignal);
   debugLog("Estimator: Initialized RPC client");
-
-  // Detect stop signal
-  let abort = false;
-  abortSignal.addEventListener(
-    "abort",
-    () => {
-      abort = true;
-    },
-    { once: true },
-  );
 
   let lastFees = initialFees;
 
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    if (abort) {
-      return;
-    }
+  while (!abortSignal.aborted) {
     const start = Date.now();
     debugLog("Estimator: Starting new iteration", new Date(start).toJSON());
 
@@ -73,6 +60,8 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
 
         debugLog("Detected new block:", block.height, b_hash);
 
+        last_b_height = block.height;
+
         if (block) {
           const ts = block.time || 0;
 
@@ -87,7 +76,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
       }
     } catch (error) {
       console.error("Estimator: Encountered RPC error:", error);
-      yield { ready, fees: lastFees };
+      yield { ready, lastBlockHeight: last_b_height, lastBlockHash: last_b_hash, fees: lastFees };
       await abortableDelay(refresh * 1000, abortSignal);
       continue;
     }
@@ -105,7 +94,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
       });
     } catch (error) {
       console.error("Estimator: Encountered RPC error:", error);
-      yield { ready, fees: lastFees };
+      yield { ready, lastBlockHeight: last_b_height, lastBlockHash: last_b_hash, fees: lastFees };
       await abortableDelay(refresh * 1000, abortSignal);
       continue;
     }
@@ -182,7 +171,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
       }
     }
 
-    yield { ready, fees: min_fees };
+    yield { ready, lastBlockHeight: last_b_height, lastBlockHash: last_b_hash, fees: min_fees };
 
     lastFees = { ...min_fees };
 
@@ -198,27 +187,25 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
   }
 };
 
-const doWork = async (options: FeeEstimatorOptions, messagePort?: MessagePort) => {
-  const port = isMainThread ? messagePort! : parentPort!;
-
+const doWork = async (options: FeeEstimatorOptions, messagePort: MessagePort) => {
   const abortController = new AbortController();
 
-  port.on("message", (value) => {
+  messagePort.on("message", (value) => {
     if (value === "stop") {
       abortController.abort();
-      port.close();
+      messagePort.close();
     }
   });
 
   for await (const result of estimateFee(options, abortController.signal)) {
     // send recommended fees over message port
-    port.postMessage(result);
+    messagePort.postMessage(result);
   }
 };
 
 if (!isMainThread) {
   const receivedOptions = workerData as FeeEstimatorOptions;
-  doWork(receivedOptions);
+  doWork(receivedOptions, parentPort!);
 }
 
 export const initEstimator = (options: FeeEstimatorOptions) => {

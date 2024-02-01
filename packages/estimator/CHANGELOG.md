@@ -1,6 +1,11 @@
 # Changelog
 
-## v0.3.0
+## v0.4.0
+- added `lastBlockHeigh` and `lastBlockHash` to output
+- better abort signal handling
+- export more types
+
+## v0.3.1
 - use `getmempoolinfo` to detect ready state
 - minor API change - see [README.md](./README.md)
 

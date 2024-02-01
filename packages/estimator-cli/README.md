@@ -29,7 +29,7 @@ one-dollar-fee-estimator --connection <host>:<port> --username <username> --pass
 
 # OR using NPX
 
-npx @samouraiwallet/one-dollar-fee-estimator-cli --connection <host>:<port> --username <username> --password <password> [--mode <mode>] [--refresh <delay>]
+npx @samouraiwallet/one-dollar-fee-estimator-cli@latest --connection <host>:<port> --username <username> --password <password> [--mode <mode>] [--refresh <delay>]
 
 [-c OR --connection] = Connection string to bitcoind RPC API. Must be of the form <host>:<port>
 

@@ -9,6 +9,8 @@ export type FeeRates = {
 
 export type Result = {
   ready: boolean;
+  lastBlockHeight: number | null;
+  lastBlockHash: string | null;
   fees: FeeRates;
 };
 

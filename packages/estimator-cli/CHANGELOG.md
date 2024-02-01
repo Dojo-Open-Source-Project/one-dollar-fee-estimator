@@ -1,6 +1,9 @@
 # Changelog
 
-## v0.3.0
+## v0.4.0
+- use latest estimator
+
+## v0.3.1
 - use `getmempoolinfo` to detect ready state
 
 ## v0.2.0

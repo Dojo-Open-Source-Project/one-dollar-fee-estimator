@@ -51,8 +51,9 @@ export class RPCClient {
   private readonly ssl: boolean;
   private readonly timeout: number;
   private readonly agent: http.Agent | https.Agent;
+  private readonly abortSignal: AbortSignal;
 
-  constructor(options: RPCOptions) {
+  constructor(options: RPCOptions, abortSignal: AbortSignal) {
     this.validateNetwork(options.network);
 
     const credentials = this.getCredentials(options);
@@ -66,6 +67,8 @@ export class RPCClient {
     this.timeout = defaults.timeout;
 
     this.agent = this.instantiateAgent(this.ssl);
+
+    this.abortSignal = abortSignal;
   }
 
   private validateNetwork(network?: keyof typeof networks) {
@@ -137,6 +140,7 @@ export class RPCClient {
         "Content-Type": "application/json",
         "Content-Length": Buffer.byteLength(body),
       },
+      signal: this.abortSignal,
     });
 
     return { request, body };

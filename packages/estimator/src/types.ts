@@ -7,10 +7,15 @@ export type FeeRates = {
   "0.999": number;
 };
 
+export type Block = {
+  height: number;
+  hash: string;
+  time: number;
+} | null;
+
 export type Result = {
   ready: boolean;
-  lastBlockHeight: number | null;
-  lastBlockHash: string | null;
+  lastBlock: Block;
   fees: FeeRates;
 };
 

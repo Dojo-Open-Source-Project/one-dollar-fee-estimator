@@ -6,7 +6,7 @@ import { createDebugLog, abortableDelay, median, sum, typedObjectKeys } from "./
 import { RingBuffer } from "./ring-buffer.js";
 import { getBundlesDistrib, getTxsDistrib } from "./distributions.js";
 
-import type { FeeEstimatorOptions, FeeRates, Result } from "./types";
+import type { FeeEstimatorOptions, FeeRates, Result, Block } from "./types";
 
 const initialFees: FeeRates = {
   "0.1": 1,
@@ -31,7 +31,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
 
   let ready = false;
   let last_b_hash = null;
-  let last_b_height = null;
+  let last_block: Block = null;
   let prev_block_ts = null;
   let prev_weights = new Map<number, number>();
   const nb_samples = Math.floor((10 * 60) / refresh);
@@ -58,9 +58,13 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
 
         const block = await client.getblockheader({ blockhash: b_hash, verbose: true });
 
-        debugLog("Detected new block:", block.height, b_hash);
+        debugLog("Estimator: Detected new block:", block.height, b_hash);
 
-        last_b_height = block.height;
+        last_block = {
+          height: block.height,
+          hash: block.hash,
+          time: block.time,
+        };
 
         if (block) {
           const ts = block.time || 0;
@@ -76,7 +80,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
       }
     } catch (error) {
       console.error("Estimator: Encountered RPC error:", error);
-      yield { ready, lastBlockHeight: last_b_height, lastBlockHash: last_b_hash, fees: lastFees };
+      yield { ready, lastBlock: last_block, fees: lastFees };
       await abortableDelay(refresh * 1000, abortSignal);
       continue;
     }
@@ -94,7 +98,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
       });
     } catch (error) {
       console.error("Estimator: Encountered RPC error:", error);
-      yield { ready, lastBlockHeight: last_b_height, lastBlockHash: last_b_hash, fees: lastFees };
+      yield { ready, lastBlock: last_block, fees: lastFees };
       await abortableDelay(refresh * 1000, abortSignal);
       continue;
     }
@@ -171,7 +175,9 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
       }
     }
 
-    yield { ready, lastBlockHeight: last_b_height, lastBlockHash: last_b_hash, fees: min_fees };
+    debugLog("Estimator: Calculated new feerates:", JSON.stringify(min_fees));
+
+    yield { ready, lastBlock: last_block, fees: min_fees };
 
     lastFees = { ...min_fees };
 

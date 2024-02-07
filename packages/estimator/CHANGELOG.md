@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.0
+- changed output shape
+- last block information now contains `time`
+
 ## v0.4.0
 - added `lastBlockHeigh` and `lastBlockHash` to output
 - better abort signal handling

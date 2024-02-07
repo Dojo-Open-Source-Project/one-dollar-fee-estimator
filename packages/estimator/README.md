@@ -59,6 +59,11 @@ estimator.on('data', (result) => {
     // object of targets and their feerates: 
     // {
     //  ready: true,
+    //  lastBlock: {
+    //    height: 829364,
+    //    hash: "00000000000000000001f3eb6464cd19b0a8a1f3a98b1b0af83ba9b4a4c0b259",
+    //    time: 1707310080,
+    //  }
     //  fees: {
     //    "0.1": number,
     //    "0.2": number,

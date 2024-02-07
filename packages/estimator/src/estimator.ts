@@ -20,8 +20,7 @@ export class FeeEstimator extends TypedEventEmitter<Events> {
 
     this._data = {
       ready: false,
-      lastBlockHash: null,
-      lastBlockHeight: null,
+      lastBlock: null,
       fees: {
         "0.1": 1,
         "0.2": 1,

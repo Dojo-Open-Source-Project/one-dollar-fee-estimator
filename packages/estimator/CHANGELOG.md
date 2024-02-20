@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.6.0
+- return `ready: false` on error
+
 ## v0.5.0
 - changed output shape
 - last block information now contains `time`

@@ -24,7 +24,7 @@
     "build:clean": "rm -rf dist",
     "build:esm": "tsc -p tsconfig.build.json",
     "build": "pnpm run build:clean && pnpm run build:esm",
-    "prepack": "pnpm install && pnpm -w run lint && pnpm run typescript && pnpm run test pnpm run build"
+    "prepack": "pnpm install && pnpm -w run lint && pnpm run typescript && pnpm run test && pnpm run build"
   },
   "repository": {
     "type": "git",

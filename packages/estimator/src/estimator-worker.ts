@@ -80,7 +80,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
       }
     } catch (error) {
       console.error("Estimator: Encountered RPC error:", error);
-      yield { ready, lastBlock: last_block, fees: lastFees };
+      yield { ready: false, lastBlock: last_block, fees: lastFees };
       await abortableDelay(refresh * 1000, abortSignal);
       continue;
     }
@@ -98,7 +98,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
       });
     } catch (error) {
       console.error("Estimator: Encountered RPC error:", error);
-      yield { ready, lastBlock: last_block, fees: lastFees };
+      yield { ready: false, lastBlock: last_block, fees: lastFees };
       await abortableDelay(refresh * 1000, abortSignal);
       continue;
     }

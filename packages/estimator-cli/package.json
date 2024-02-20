@@ -1,6 +1,6 @@
 {
   "name": "@samouraiwallet/one-dollar-fee-estimator-cli",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "engines": {
     "node": ">=16"
   },
@@ -21,8 +21,7 @@
     "build:clean": "rm -rf dist",
     "build:esm": "tsc -p tsconfig.build.json",
     "build": "pnpm run build:clean && pnpm run build:esm && chmod +x ./dist/bin.js",
-    "prepack": "pnpm install && pnpm -w run lint && pnpm run typescript",
-    "prepare": "pnpm run build"
+    "prepack": "pnpm install && pnpm -w run lint && pnpm run typescript && pnpm run build"
   },
   "repository": {
     "type": "git",
@@ -35,7 +34,7 @@
   "license": "LGPL-3.0",
   "homepage": "https://code.samourai.io/dojo/one-dollar-fee-estimator-js",
   "dependencies": {
-    "@samouraiwallet/one-dollar-fee-estimator": "workspace:0.5.0",
+    "@samouraiwallet/one-dollar-fee-estimator": "workspace:0.6.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {

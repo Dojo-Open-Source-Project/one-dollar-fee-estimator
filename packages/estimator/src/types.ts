@@ -59,6 +59,7 @@ export type RPCResponse = {
 
 export type RequestOptions = {
   timeout?: number;
+  abortSignal?: AbortSignal;
 };
 
 export type GetMempoolInfoReturnType = {

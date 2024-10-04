@@ -51,9 +51,8 @@ export class RPCClient {
   private readonly ssl: boolean;
   private readonly timeout: number;
   private readonly agent: http.Agent | https.Agent;
-  private readonly abortSignal: AbortSignal;
 
-  constructor(options: RPCOptions, abortSignal: AbortSignal) {
+  constructor(options: RPCOptions) {
     this.validateNetwork(options.network);
 
     const credentials = this.getCredentials(options);
@@ -67,8 +66,6 @@ export class RPCClient {
     this.timeout = defaults.timeout;
 
     this.agent = this.instantiateAgent(this.ssl);
-
-    this.abortSignal = abortSignal;
   }
 
   private validateNetwork(network?: keyof typeof networks) {
@@ -140,7 +137,7 @@ export class RPCClient {
         "Content-Type": "application/json",
         "Content-Length": Buffer.byteLength(body),
       },
-      signal: this.abortSignal,
+      signal: options?.abortSignal,
     });
 
     return { request, body };
@@ -210,33 +207,39 @@ export class RPCClient {
     });
   };
 
-  public getmempoolinfo = async (): Promise<GetMempoolInfoReturnType> => {
-    return await this.makeRequest({ method: "getmempoolinfo" });
+  public getmempoolinfo = async (options?: RequestOptions): Promise<GetMempoolInfoReturnType> => {
+    return await this.makeRequest({ method: "getmempoolinfo" }, options);
   };
 
-  public getbestblockhash = async (): Promise<string> => {
-    return await this.makeRequest<string>({ method: "getbestblockhash" });
+  public getbestblockhash = async (options?: RequestOptions): Promise<string> => {
+    return await this.makeRequest<string>({ method: "getbestblockhash" }, options);
   };
 
-  public getblockheader = async <V extends GetBlockHeaderVerbosity>({
-    blockhash,
-    verbose,
-  }: {
-    blockhash: string;
-    verbose: V;
-  }): Promise<GetBlockHeaderReturnType<V>> => {
-    return await this.makeRequest({ method: "getblockheader", parameters: { blockhash, verbose } });
+  public getblockheader = async <V extends GetBlockHeaderVerbosity>(
+    {
+      blockhash,
+      verbose,
+    }: {
+      blockhash: string;
+      verbose: V;
+    },
+    options?: RequestOptions,
+  ): Promise<GetBlockHeaderReturnType<V>> => {
+    return await this.makeRequest({ method: "getblockheader", parameters: { blockhash, verbose } }, options);
   };
 
-  public getblock = async <N extends GetBlockVerbosity>({ blockhash, verbosity }: { blockhash: string; verbosity: N }): Promise<GetBlockReturnType<N>> => {
-    return await this.makeRequest({ method: "getblock", parameters: { blockhash, verbosity } });
+  public getblock = async <N extends GetBlockVerbosity>(
+    { blockhash, verbosity }: { blockhash: string; verbosity: N },
+    options?: RequestOptions,
+  ): Promise<GetBlockReturnType<N>> => {
+    return await this.makeRequest({ method: "getblock", parameters: { blockhash, verbosity } }, options);
   };
 
-  public getblocktemplate = async (obj: JSONType): Promise<GetBlockTemplateReturnType> => {
-    return await this.makeRequest({ method: "getblocktemplate", parameters: obj });
+  public getblocktemplate = async (obj: JSONType, options?: RequestOptions): Promise<GetBlockTemplateReturnType> => {
+    return await this.makeRequest({ method: "getblocktemplate", parameters: obj }, options);
   };
 
-  public getuptime = async (): Promise<GetUptimeReturnType> => {
-    return await this.makeRequest({ method: "uptime" });
+  public getuptime = async (options?: RequestOptions): Promise<GetUptimeReturnType> => {
+    return await this.makeRequest({ method: "uptime" }, options);
   };
 }

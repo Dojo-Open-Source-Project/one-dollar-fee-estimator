@@ -38,7 +38,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
   const delta_weights = new RingBuffer<Map<number, number>>(nb_samples);
   const interblocks = new RingBuffer<number>(144);
 
-  const client = new RPCClient(rpcOptions, abortSignal);
+  const client = new RPCClient(rpcOptions);
   debugLog("Estimator: Initialized RPC client");
 
   let lastFees = initialFees;
@@ -48,7 +48,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
     debugLog("Estimator: Starting new iteration", new Date(start).toJSON());
 
     try {
-      const [b_hash, mempoolinfo] = await Promise.all([client.getbestblockhash(), client.getmempoolinfo()]);
+      const [b_hash, mempoolinfo] = await Promise.all([client.getbestblockhash({ abortSignal }), client.getmempoolinfo({ abortSignal })]);
 
       ready = mempoolinfo.loaded;
 
@@ -56,7 +56,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
         prev_weights.clear();
         last_b_hash = b_hash;
 
-        const block = await client.getblockheader({ blockhash: b_hash, verbose: true });
+        const block = await client.getblockheader({ blockhash: b_hash, verbose: true }, { abortSignal });
 
         debugLog("Estimator: Detected new block:", block.height, b_hash);
 
@@ -91,11 +91,14 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
 
     let b_template;
     try {
-      b_template = await client.getblocktemplate({
-        template_request: {
-          rules: ["segwit", "taproot", "csv", "bip34", "bip65", "bip66"],
+      b_template = await client.getblocktemplate(
+        {
+          template_request: {
+            rules: ["segwit", "taproot", "csv", "bip34", "bip65", "bip66"],
+          },
         },
-      });
+        { abortSignal },
+      );
     } catch (error) {
       console.error("Estimator: Encountered RPC error:", error);
       yield { ready: false, lastBlock: last_block, fees: lastFees };

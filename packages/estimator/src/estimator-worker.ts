@@ -1,12 +1,12 @@
 import { parentPort, workerData, isMainThread, Worker, MessageChannel, MessagePort } from "worker_threads";
 import { fileURLToPath } from "url";
+import { RPCClient } from "@samouraiwallet/bitcoin-rpc";
 
-import { RPCClient } from "./rpc-client.js";
 import { createDebugLog, abortableDelay, median, sum, typedObjectKeys } from "./utils.js";
 import { RingBuffer } from "./ring-buffer.js";
 import { getBundlesDistrib, getTxsDistrib } from "./distributions.js";
 
-import type { FeeEstimatorOptions, FeeRates, Result, Block } from "./types";
+import type { FeeEstimatorOptions, FeeRates, Result, Block, GetBlockTemplateReturnType, GetBlockHeaderReturnType, GetMempoolInfoReturnType } from "./types";
 
 const initialFees: FeeRates = {
   "0.1": 1,
@@ -48,7 +48,10 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
     debugLog("Estimator: Starting new iteration", new Date(start).toJSON());
 
     try {
-      const [b_hash, mempoolinfo] = await Promise.all([client.getbestblockhash({ abortSignal }), client.getmempoolinfo({ abortSignal })]);
+      const [b_hash, mempoolinfo] = (await Promise.all([client.getbestblockhash({ abortSignal }), client.getmempoolinfo({ abortSignal })])) as [
+        string,
+        GetMempoolInfoReturnType,
+      ];
 
       ready = mempoolinfo.loaded;
 
@@ -56,7 +59,7 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
         prev_weights.clear();
         last_b_hash = b_hash;
 
-        const block = await client.getblockheader({ blockhash: b_hash, verbose: true }, { abortSignal });
+        const block = (await client.getblockheader({ blockhash: b_hash, verbose: true }, { abortSignal })) as GetBlockHeaderReturnType;
 
         debugLog("Estimator: Detected new block:", block.height, b_hash);
 
@@ -91,14 +94,14 @@ const estimateFee = async function* (options: FeeEstimatorOptions, abortSignal: 
 
     let b_template;
     try {
-      b_template = await client.getblocktemplate(
+      b_template = (await client.getblocktemplate(
         {
           template_request: {
             rules: ["segwit", "taproot", "csv", "bip34", "bip65", "bip66"],
           },
         },
         { abortSignal },
-      );
+      )) as GetBlockTemplateReturnType;
     } catch (error) {
       console.error("Estimator: Encountered RPC error:", error);
       yield { ready: false, lastBlock: last_block, fees: lastFees };

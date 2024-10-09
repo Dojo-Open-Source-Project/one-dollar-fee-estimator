@@ -43,6 +43,11 @@ const main = async () => {
       coerce: getHostPort,
       demandOption: true,
     })
+    .option("secure", {
+      alias: "s",
+      describe: "Use HTTPS to connect to bitcoind RPC API",
+      boolean: true,
+    })
     .option("username", {
       alias: "u",
       describe: "Username used to access bitcoind RPC API",
@@ -86,12 +91,14 @@ const main = async () => {
       return {
         host: argv.connection.host,
         port: argv.connection.port,
+        protocol: argv.secure ? "https" : "http",
         cookie: argv.cookie,
       };
     } else if (argv.username && argv.password) {
       return {
         host: argv.connection.host,
         port: argv.connection.port,
+        protocol: argv.secure ? "https" : "http",
         username: argv.username,
         password: argv.password,
       };

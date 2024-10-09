@@ -21,10 +21,13 @@ export type Result = {
 
 export type Mode = "txs" | "bundles";
 
+export type Protocol = "http" | "https";
+
 export type RpcOptions = {
   host: string;
   port: number;
   timeout?: number;
+  protocol: Protocol;
 } & (
   | {
       username: string;
@@ -44,22 +47,6 @@ export type FeeEstimatorOptions = {
 };
 
 // RPC client
-
-export type MethodName = "getmempoolinfo" | "getbestblockhash" | "getblockheader" | "getblock" | "getblocktemplate" | "uptime";
-
-export type JSONPrimitive = string | number | boolean | null;
-export type JSONValue = JSONPrimitive | JSONType;
-export type JSONType = { [member: string]: JSONValue } | Array<JSONValue>;
-
-export type RPCResponse = {
-  result: JSONValue;
-  error: { code: number; message: string; data?: unknown } | null;
-  id: number | string;
-};
-
-export type RequestOptions = {
-  timeout?: number;
-};
 
 export type GetMempoolInfoReturnType = {
   loaded: boolean;
@@ -81,11 +68,7 @@ export type GetBlockTemplateReturnType = {
   }[];
 };
 
-export type GetBlockHeaderVerbosity = boolean;
-
-export type BlockHeaderV0 = string;
-
-export type BlockHeaderV1 = {
+export type GetBlockHeaderReturnType = {
   hash: string;
   confirmations: number;
   height: number;
@@ -102,17 +85,3 @@ export type BlockHeaderV1 = {
   previousblockhash: string;
   nextblockhash: string;
 };
-
-export type GetBlockHeaderReturnType<T> = T extends false ? BlockHeaderV0 : T extends true ? BlockHeaderV1 : never;
-
-export type GetBlockVerbosity = 0 | 1;
-
-export type BlockV0 = string;
-
-export type BlockV1 = {
-  time: number;
-};
-
-export type GetBlockReturnType<T> = T extends 0 ? BlockV0 : T extends 1 ? BlockV1 : never;
-
-export type GetUptimeReturnType = number;

@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.7.0
+- use estimator v0.7.0
+
 ## v0.6.0
 - use estimator v0.6.0
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.7.0
+- use `@samouraiwallet/bitcoin-rpc` client
+
 ## v0.6.0
 - return `ready: false` on error
 

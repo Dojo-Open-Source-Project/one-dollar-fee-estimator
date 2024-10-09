@@ -1,8 +1,8 @@
 {
   "name": "@samouraiwallet/one-dollar-fee-estimator-cli",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "description": "A CLI tool estimating the minimum feerate required for the inclusion of a bitcoin transaction into the next block.",
   "keywords": [
@@ -25,16 +25,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://code.samourai.io/dojo/one-dollar-fee-estimator-js.git"
+    "url": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator.git"
   },
   "bugs": {
-    "url": "https://code.samourai.io/dojo/one-dollar-fee-estimator-js/-/issues"
+    "url": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator/issues"
   },
   "author": "Katana Cryptographic Ltd.",
   "license": "LGPL-3.0",
-  "homepage": "https://code.samourai.io/dojo/one-dollar-fee-estimator-js",
+  "homepage": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator/tree/master/packages/estimator-cli",
   "dependencies": {
-    "@samouraiwallet/one-dollar-fee-estimator": "workspace:0.6.0",
+    "@samouraiwallet/one-dollar-fee-estimator": "workspace:0.7.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {

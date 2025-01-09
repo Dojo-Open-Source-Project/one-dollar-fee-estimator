@@ -1,7 +1,7 @@
 # The $1 Fee Estimator
 ## @samouraiwallet/one-dollar-fee-estimator
 
-This library is a Typescript port of the original Python library - [The $1 Fee Estimator](https://code.samourai.io/oxt/one_dollar_fee_estimator/).
+This library is a Typescript port of the original Python library - [The $1 Fee Estimator](https://github.com/Archive-Samourai-Wallet/one_dollar_fee_estimator).
 
 > The $1 Fee Estimator is an algorithm designed to return a feerate:
 >
@@ -10,16 +10,24 @@ This library is a Typescript port of the original Python library - [The $1 Fee E
 >
 > Despite its simplicity, the $1 Fee Estimator requires very few data to perform well and is less than 200 lines of code, making it easy to deploy or to implement in all programming languages.
 
-See [original README](https://code.samourai.io/oxt/one_dollar_fee_estimator/-/blob/master/README.md) to understand how this algorithm works.
+See [original README](https://github.com/Archive-Samourai-Wallet/one_dollar_fee_estimator) to understand how this algorithm works.
 
 ## Requirements
-- Node.js v16 or newer
+- Node.js v18 or newer
 - NPM (or yarn or pnpm)
 - Synchnonized Bitcoin Core with accessible RPC
 
 ## Installation
 ```shell
 npm i @samouraiwallet/one-dollar-fee-estimator
+```
+or
+```shell
+pnpm i @samouraiwallet/one-dollar-fee-estimator
+```
+or
+```shell
+yarn add @samouraiwallet/one-dollar-fee-estimator
 ```
 
 ## Usage

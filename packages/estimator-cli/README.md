@@ -1,10 +1,10 @@
 # The $1 Fee Estimator CLI
 ## @samouraiwallet/one-dollar-fee-estimator-cli
 
-This is a CLI tool for users that want to run [The $1 Fee Estimator](https://code.samourai.io/dojo/one-dollar-fee-estimator-js) locally in terminal
+This is a CLI tool for users that want to run [The $1 Fee Estimator](../estimator) locally in terminal
 
 ## Requirements
-- Node.js v16 or newer
+- Node.js v18 or newer
 - NPM (or yarn or pnpm)
 - Synchnonized Bitcoin Core with accessible RPC
 

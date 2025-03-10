@@ -34,7 +34,7 @@
   "license": "LGPL-3.0",
   "homepage": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator/tree/master/packages/estimator-cli",
   "dependencies": {
-    "@samouraiwallet/one-dollar-fee-estimator": "workspace:0.7.0",
+    "@samouraiwallet/one-dollar-fee-estimator": "workspace:*",
     "yargs": "^17.7.2"
   },
   "devDependencies": {

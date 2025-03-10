@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.8.0
+- updated dependencies
+
 ## v0.7.0
 - use `@samouraiwallet/bitcoin-rpc` client
 

@@ -1,43 +1,37 @@
 {
-  "name": "@samouraiwallet/one-dollar-fee-estimator-cli",
-  "version": "0.8.0",
-  "engines": {
-    "node": ">=18"
-  },
-  "description": "A CLI tool estimating the minimum feerate required for the inclusion of a bitcoin transaction into the next block.",
-  "keywords": [
-    "bitcoin",
-    "fees",
-    "calculator",
-    "estimator",
-    "cli"
-  ],
-  "type": "module",
-  "bin": {
-    "one-dollar-fee-estimator": "./dist/bin.js"
-  },
-  "scripts": {
-    "typescript": "tsc --noEmit",
-    "build:clean": "rm -rf dist",
-    "build:esm": "tsc -p tsconfig.build.json",
-    "build": "pnpm run build:clean && pnpm run build:esm && chmod +x ./dist/bin.js",
-    "prepack": "pnpm install && pnpm -w run lint && pnpm run typescript && pnpm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator/issues"
-  },
-  "author": "Katana Cryptographic Ltd.",
-  "license": "LGPL-3.0",
-  "homepage": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator/tree/master/packages/estimator-cli",
-  "dependencies": {
-    "@samouraiwallet/one-dollar-fee-estimator": "workspace:*",
-    "yargs": "^17.7.2"
-  },
-  "devDependencies": {
-    "@types/yargs": "^17.0.32"
-  }
+	"name": "@samouraiwallet/one-dollar-fee-estimator-cli",
+	"version": "0.8.0",
+	"engines": {
+		"node": ">=18"
+	},
+	"description": "A CLI tool estimating the minimum feerate required for the inclusion of a bitcoin transaction into the next block.",
+	"keywords": ["bitcoin", "fees", "calculator", "estimator", "cli"],
+	"type": "module",
+	"bin": {
+		"one-dollar-fee-estimator": "./dist/bin.js"
+	},
+	"scripts": {
+		"typescript": "tsc --noEmit",
+		"build:clean": "rm -rf dist",
+		"build:esm": "tsc -p tsconfig.build.json",
+		"build": "pnpm run build:clean && pnpm run build:esm && chmod +x ./dist/bin.js",
+		"prepack": "pnpm install && pnpm -w run lint && pnpm run typescript && pnpm run build"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator.git"
+	},
+	"bugs": {
+		"url": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator/issues"
+	},
+	"author": "Katana Cryptographic Ltd.",
+	"license": "LGPL-3.0",
+	"homepage": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator/tree/master/packages/estimator-cli",
+	"dependencies": {
+		"@samouraiwallet/one-dollar-fee-estimator": "workspace:*",
+		"yargs": "^17.7.2"
+	},
+	"devDependencies": {
+		"@types/yargs": "^17.0.33"
+	}
 }

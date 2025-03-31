@@ -1,46 +1,41 @@
 {
-  "name": "@samouraiwallet/one-dollar-fee-estimator",
-  "version": "0.8.0",
-  "engines": {
-    "node": ">=18"
-  },
-  "description": "A script estimating the minimum feerate required for the inclusion of a bitcoin transaction into the next block.",
-  "keywords": [
-    "bitcoin",
-    "fees",
-    "calculator",
-    "estimator"
-  ],
-  "type": "module",
-  "main": "./dist/index.js",
-  "exports": {
-    ".": "./dist/index.js"
-  },
-  "types": "./dist/index.d.ts",
-  "scripts": {
-    "test": "vitest run",
-    "test:watch": "vitest watch",
-    "typescript": "tsc --noEmit",
-    "build:clean": "rm -rf dist",
-    "build:esm": "tsc -p tsconfig.build.json",
-    "build": "pnpm run build:clean && pnpm run build:esm",
-    "prepack": "pnpm install && pnpm -w run lint && pnpm run typescript && pnpm run test && pnpm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator/issues"
-  },
-  "author": "Katana Cryptographic Ltd.",
-  "license": "LGPL-3.0",
-  "homepage": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator/tree/master/packages/estimator",
-  "devDependencies": {
-    "@vitest/coverage-v8": "^1.6.1",
-    "vitest": "^1.6.1"
-  },
-  "dependencies": {
-    "@samouraiwallet/bitcoin-rpc": "0.5.0"
-  }
+	"name": "@samouraiwallet/one-dollar-fee-estimator",
+	"version": "0.8.0",
+	"engines": {
+		"node": ">=18"
+	},
+	"description": "A script estimating the minimum feerate required for the inclusion of a bitcoin transaction into the next block.",
+	"keywords": ["bitcoin", "fees", "calculator", "estimator"],
+	"type": "module",
+	"main": "./dist/index.js",
+	"exports": {
+		".": "./dist/index.js"
+	},
+	"types": "./dist/index.d.ts",
+	"scripts": {
+		"test": "vitest run",
+		"test:watch": "vitest watch",
+		"typescript": "tsc --noEmit",
+		"build:clean": "rm -rf dist",
+		"build:esm": "tsc -p tsconfig.build.json",
+		"build": "pnpm run build:clean && pnpm run build:esm",
+		"prepack": "pnpm install && pnpm -w run lint && pnpm run typescript && pnpm run test && pnpm run build"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator.git"
+	},
+	"bugs": {
+		"url": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator/issues"
+	},
+	"author": "Katana Cryptographic Ltd.",
+	"license": "LGPL-3.0",
+	"homepage": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator/tree/master/packages/estimator",
+	"devDependencies": {
+		"@vitest/coverage-v8": "^3.1.1",
+		"vitest": "^3.1.1"
+	},
+	"dependencies": {
+		"@samouraiwallet/bitcoin-rpc": "0.6.0"
+	}
 }

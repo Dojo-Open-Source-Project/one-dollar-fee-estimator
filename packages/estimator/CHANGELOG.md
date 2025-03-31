@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.9.0
+- reformatted code
+- updated dependencies
+
 ## v0.8.0
 - updated dependencies
 

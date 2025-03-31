@@ -1,31 +1,24 @@
 {
-  "name": "@samouraiwallet/one-dollar-fee-estimator-monorepo",
-  "private": true,
-  "devDependencies": {
-    "@types/node": "^18.19.80",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-import-resolver-typescript": "^3.8.4",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-prettier": "^5.2.3",
-    "eslint-plugin-unicorn": "^47.0.0",
-    "prettier": "^3.5.3",
-    "typescript": "^5.8.2"
-  },
-  "scripts": {
-    "lint": "eslint --ext .ts packages/",
-    "pretty": "prettier ./packages/**/src -w"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator/issues"
-  },
-  "author": "Katana Cryptographic Ltd.",
-  "license": "LGPL-3.0",
-  "homepage": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator"
+	"name": "@samouraiwallet/one-dollar-fee-estimator-monorepo",
+	"private": true,
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@types/node": "^18.19.84",
+		"typescript": "^5.8.2"
+	},
+	"scripts": {
+		"format": "biome format --write ./packages/**/src ./packages/**/test",
+		"lint": "biome lint ./packages/**/src ./packages/**/test",
+		"lint:fix": "biome lint --write ./packages/**/src ./packages/**/test"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator.git"
+	},
+	"bugs": {
+		"url": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator/issues"
+	},
+	"author": "Katana Cryptographic Ltd.",
+	"license": "LGPL-3.0",
+	"homepage": "https://github.com/Dojo-Open-Source-Project/one-dollar-fee-estimator"
 }

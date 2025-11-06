@@ -3,8 +3,8 @@
 	"private": true,
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
-		"@types/node": "^18.19.84",
-		"typescript": "^5.8.2"
+		"@types/node": "^18.19.130",
+		"typescript": "^5.9.3"
 	},
 	"scripts": {
 		"format": "biome format --write ./packages/**/src ./packages/**/test",

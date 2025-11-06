@@ -18,7 +18,7 @@ export const getTxsDistrib = (txs: Tx[]): Map<number, number> => {
 
 		const vsize = Math.ceil(weight / 4);
 		const feerate = fee / vsize;
-		const bin = Math.ceil(feerate);
+        const bin = feerate >= 1 ? Math.ceil(feerate) : Math.ceil(feerate * 10) / 10;
 
 		weights.set(bin, (weights.get(bin) ?? 0) + weight);
 	}
@@ -70,7 +70,7 @@ export const getBundlesDistrib = (txs: Tx[]): Map<number, number> => {
 
 		const bundle_vsize = Math.ceil(bundle_weight / 4);
 		const feerate = bundle_fee / bundle_vsize;
-		const bin = Math.ceil(feerate);
+        const bin = feerate >= 1 ? Math.ceil(feerate) : Math.ceil(feerate * 10) / 10;
 
 		weights.set(bin, (weights.get(bin) ?? 0) + bundle_weight);
 	}

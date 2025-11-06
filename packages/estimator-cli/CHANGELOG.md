@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.10.0
+- added support for subsat feerates
+- updated dependencies
+
 ## v0.9.0
 - use estimator v0.9.0
 

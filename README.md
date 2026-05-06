@@ -1,3 +1,9 @@
+# Archived
+
+This project has been moved to [dojo-tools repository](https://github.com/Dojo-Open-Source-Project/dojo-tools/tree/master/packages/next-block-estimator).
+
+---
+
 # The $1 Fee Estimator
 
 This is a monorepo for two libraries:
